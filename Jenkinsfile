@@ -20,8 +20,7 @@ pipeline {
 
         stage('SonarQube Analysis') {
             steps {
-                // Pas besoin de tool ici si tu utilises withSonarQubeEnv seul
-                withSonarQubeEnv('sonarqube') {  // ← mets EXACTEMENT le nom que tu as donné à ton serveur Sonar dans Manage Jenkins > System > SonarQube servers
+                   withSonarQubeEnv('sq1') {  // ← mets EXACTEMENT le nom que tu as donné à ton serveur Sonar dans Manage Jenkins > System > SonarQube servers
                     sh 'mvn sonar:sonar'
                 }
             }
