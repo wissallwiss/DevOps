@@ -1,12 +1,19 @@
 pipeline {
-    agent any  // ou { label 'linux' } si tu as un agent spécifique configuré
+    agent any
 
     stages {
+        stage('Prepare Maven Wrapper') {
+            steps {
+                sh 'chmod +x ./mvnw'  // ← rend mvnw exécutable
+                sh './mvnw --version' // ← test rapide pour confirmer
+            }
+        }
+
         stage('Scan') {
             steps {
-                withSonarQubeEnv('sq1') {  // ← Pas de 'installationName:', juste le nom en premier paramètre (comme dans la vidéo et la doc officielle)
-                    sh './mvnw clean org.sonarsource.scanner.maven:sonar-maven-plugin:sonar'  // version auto (plus stable que hardcodée)
-                    // Alternative simple : sh './mvnw clean sonar:sonar'
+                withSonarQubeEnv('sq1') {
+                    sh './mvnw clean org.sonarsource.scanner.maven:sonar-maven-plugin:sonar'
+                    // ou la version plus simple : sh './mvnw clean sonar:sonar'
                 }
             }
         }
