@@ -1,37 +1,15 @@
 pipeline {
-    agent any
-    tools {
-        maven 'maven' // Utilise l'installation Maven configurée dans Jenkins
+    agent { label 'linux'}
+    options{
+        buildDiscarder(logRotator(numTokeepStr: '5'))
     }
-    stages {
-        stage('Checkout') {
+   stages {
+        stage('Scan') {
             steps {
-                checkout scm
-            }
-        }
-        
-        stage('Prepare Maven Wrapper') {
-            steps {
-                sh 'chmod +x ./mvnw'
-                sh './mvnw --version'
-            }
-        }
-        
-        // ✅ Étape ajoutée : Compilation du projet
-        stage('Compile') {
-            steps {
-                sh './mvnw clean compile'
-            }
-        }
-        
-        stage('Scan SonarQube') {
-            steps {
-                withSonarQubeEnv('sq1') { // Remplacez 'sq1' par le nom de votre serveur SonarQube dans Jenkins
+                withSonarQubeEnv(insrallationName: 'sq1') { 
                     sh './mvnw sonar:sonar'
                 }
             }
         }
-        
-        // stage('Quality Gate') { ... } // Optionnel
     }
 }
