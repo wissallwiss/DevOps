@@ -1,15 +1,17 @@
 pipeline {
-    agent { label 'linux'}
-    options{
-        buildDiscarder(logRotator(numTokeepStr: '5'))
-    }
-   stages {
-        stage('Scan') {
-            steps {
-                withSonarQubeEnv(insrallationName: 'sq1') { 
-                    sh './mvnw sonar:sonar'
-                }
-            }
+  agent any
+
+  options {
+    buildDiscarder(logRotator(numToKeepStr: '5'))
+  }
+
+  stages {
+    stage('Sonar') {
+      steps {
+        withSonarQubeEnv('sq1') {
+          sh 'mvn -B clean verify sonar:sonar'
         }
+      }
     }
+  }
 }
